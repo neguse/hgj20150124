@@ -7,6 +7,10 @@ BALL_INIT_X = DISP_W / 2
 BALL_INIT_Y = DISP_H / 2
 BALL_FALLED_Y_UPPER = 2500
 
+BALL_DEBUG_MOVE = 25
+
+GRAVITY = 9.81*64
+
 MARK_D = 5
 
 TORQUE_PER_PUSH = 40000
@@ -58,7 +62,7 @@ end
 
 function love.load()
 	love.physics.setMeter(64)
-	world = love.physics.newWorld(0, 9.81*64, true)
+	world = love.physics.newWorld(0, GRAVITY, true)
 
 	objects.ground = {}
 	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-250/2)
@@ -103,6 +107,31 @@ function love.keypressed(key, isrepeat)
 end
 
 function love.update(dt)
+
+	-- f fixes ball.
+	if love.keyboard.isDown("f") then
+		world:setGravity(0, 0)
+		objects.ball.body:setLinearVelocity(0, 0)
+		objects.ball.body:setAngularVelocity(0, 0)
+	else
+		world:setGravity(0, GRAVITY)
+	end
+
+	-- move ball by wasd.
+	if love.keyboard.isDown("w") then
+		objects.ball.body:setY(objects.ball.body:getY() - BALL_DEBUG_MOVE)
+	end
+	if love.keyboard.isDown("s") then
+		objects.ball.body:setY(objects.ball.body:getY() + BALL_DEBUG_MOVE)
+	end
+	if love.keyboard.isDown("a") then
+		objects.ball.body:setX(objects.ball.body:getX() - BALL_DEBUG_MOVE)
+	end
+	if love.keyboard.isDown("d") then
+		objects.ball.body:setX(objects.ball.body:getX() + BALL_DEBUG_MOVE)
+	end
+
+
 	world:update(dt)
 
 	camera:lookto(objects.ball.body:getX(), objects.ball.body:getY())
