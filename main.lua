@@ -9,7 +9,7 @@ sounds = {
 level = {
 	shapes = {
 		start = {
-			points = { -100, -500, -100, 0, 300, 0, 500, 0, 600, 10, 700, 20, 800, -30, 1200, 50, 1300, -50 },
+			points = { -100, -500, -100, 0, 300, 0, 500, 0, 600, 10, 700, 20, 800, -30, 1200, 20, 1300, -50 },
 		},
 		second = {
 			points = {0, 0, 30, 3, 82, 28, 148, 24, 193, -12, 282, -64, 387, -33, 481, 16, 638, 47, 668, -39, 775, -42, },
@@ -23,6 +23,12 @@ level = {
 		upper = {
 			points = {0, 0, 11, -1, 64, -10, 162, -34, 302, -73, 497, -166, 667, -250, 764, -298, },
 		},
+		rest = {
+			points = {0, 0, 21, -2, 106, -2, 188, 1, 229, 9, 267, 12, 320, 12, 411, 11, 494, 10, 583, 1, 628, 0, 691, 0, 748, -1, 784, -3, },
+		},
+		shark = {
+			points = {0, 0, 20, 2, 91, -7, 160, -37, 163, 2, 202, -1, 247, -5, 290, -26, 316, -38, 317, -2, 367, -6, 412, -20, 439, -37, 441, -2, 485, -2, 534, -23, 572, -43, },
+		},
 	},
 	bodies = {
 		start = { shape = "start", x = 0, y = 100 },
@@ -34,16 +40,26 @@ level = {
 		upper2 = { shape = "upper", x = 6134, y = 350 },
 		upper3 = { shape = "upper", x = 7134, y = 350 },
 		upper4 = { shape = "upper", x = 8134, y = 350 },
+		rest = { shape = "rest", x = 9000, y = 380 },
+		shark = { shape = "shark", x = 9789, y = 380 },
+		shark2 = { shape = "shark", x = 10350, y = 370 },
+		shark3 = { shape = "shark", x = 10950, y = 360 },
+		shark4 = { shape = "shark", x = 11550, y = 350 },
 	},
 	checkpoints = {
-		{x = 150, y = 0},
-		{x = 1200, y = -100},
-		{x = 3600, y = 523},
-		{x = 9999, y = 0},
+		{x = 150, y = 0, r = 100},
+		{x = 1200, y = -100, r = 100},
+		{x = 3600, y = 523, r = 100},
+		{x = 9200, y = 380, r = 100},
+		{x = 14000, y = 370, r = 1000},
 	},
 	messages = {
 		{xbegin = -200, xend = 100, message = "Push Left or Right key to rolling ball." },
 		{xbegin = 100, xend = 300, message = "Good luck!" },
+		{xbegin = 1300, xend = 2100, message = "The approach run is sometimes necessary, too." },
+		{xbegin = 1300, xend = 2100, message = "The approach run is sometimes necessary, too." },
+		{xbegin = 4124, xend = 4900, message = "Don't stop! Go! Go!" },
+		{xbegin = 9000, xend = 9800, message = "Last jump!" },
 	}
 }
 
@@ -64,8 +80,6 @@ MARK_D = 5
 TORQUE_PER_PUSH = 40000
 JUMP_PER_PUSH = -300
 
-CHECKPOINT_LEN = 100
-
 -- variables
 torque = 0
 jump = 0
@@ -73,7 +87,7 @@ objects = {}
 camera = { x=0, y=0, scale=1.5 }
 checked = 0
 isgoal = false
-isdebug = true
+isdebug = false
 starttime = nil
 goaltime = nil
 
@@ -217,7 +231,7 @@ function love.update(dt)
 			local dx = v.x - objects.ball.body:getX()
 			local dy = v.y - objects.ball.body:getY()
 			local d = math.sqrt(dx*dx+dy*dy)
-			if d < CHECKPOINT_LEN then
+			if d < v.r then
 				checked = i
 				sounds.start.sound:play()
 
@@ -294,7 +308,7 @@ function love.draw()
 		else
 			love.graphics.setColor(137, 201, 137, 128)
 		end
-		love.graphics.circle("fill", v.x, v.y, CHECKPOINT_LEN)
+		love.graphics.circle("fill", v.x, v.y, v.r)
 	end
 
 	love.graphics.setColor(137, 137, 137)
