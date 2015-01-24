@@ -35,12 +35,15 @@ Goal of this project
 Timetable
 ---------
 
-2015/01/24 16:00〜25:00(JST)
+It's my timetable.
 
-*    16:20〜20:20
-     *   First Half
-*    20:20〜21:20
+2015/01/24 16:20(JST)〜26:00(JST)
+
+*    16:20〜21:20
+     *   First Half 4hour.
+	 *   (1hour offline by unrelated matter.)
+*    21:20〜22:00
      *   Break time(and eat the dinner)
-*    21:20〜25:20
-     *   First Half
+*    22:00〜26:00
+     *   Last Half 4hour.
 
