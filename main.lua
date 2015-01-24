@@ -13,7 +13,16 @@ level = {
 		},
 	},
 	bodies = {
-		start = { shape = "start", x = 400, y = 450 },
+		start = { shape = "start", x = 0, y = 100 },
+	},
+	checkpoints = {
+		{x = 150, y = 0},
+		{x = 800, y = 0},
+		{x = 1200, y = 0},
+	},
+	messages = {
+		{xbegin = -200, xend = 100, message = "Push Left or Right key to rolling ball." },
+		{xbegin = 100, xend = 300, message = "Good luck!" },
 	}
 }
 
@@ -21,8 +30,8 @@ level = {
 DISP_W = 800
 DISP_H = 600
 
-BALL_INIT_X = DISP_W / 2
-BALL_INIT_Y = DISP_H / 2
+BALL_INIT_X = 0
+BALL_INIT_Y = 0
 BALL_FALLED_Y_UPPER = 2500
 
 BALL_DEBUG_MOVE = 25
@@ -32,13 +41,18 @@ GRAVITY = 9.81*64
 MARK_D = 5
 
 TORQUE_PER_PUSH = 40000
-JUMP_PER_PUSH = -30000
+JUMP_PER_PUSH = -300
+
+CHECKPOINT_LEN = 100
 
 -- variables
 torque = 0
 jump = 0
 objects = {}
 camera = { x=0, y=0, scale=1 }
+checked = 0
+isgoal = false
+isdebug = false
 
 function pack(...)
 	return arg
@@ -101,7 +115,6 @@ function love.load()
 	objects.ground.points = {}
 	for k, v in pairs(level.bodies) do
 		local body = love.physics.newBody(world, v.x, v.y)
-		print (body)
 		local shape = objects.ground.shapes[v.shape]
 		local fixture = love.physics.newFixture(body, shape)
 
@@ -149,31 +162,54 @@ end
 
 function love.update(dt)
 
-	-- f fixes ball.
-	if love.keyboard.isDown("f") then
-		world:setGravity(0, 0)
-		objects.ball.body:setLinearVelocity(0, 0)
-		objects.ball.body:setAngularVelocity(0, 0)
-	else
-		world:setGravity(0, GRAVITY)
+	if isdebug then
+
+		-- f fixes ball.
+		if love.keyboard.isDown("f") then
+			world:setGravity(0, 0)
+			objects.ball.body:setLinearVelocity(0, 0)
+			objects.ball.body:setAngularVelocity(0, 0)
+		else
+			world:setGravity(0, GRAVITY)
+		end
+
+		-- move ball by wasd.
+		if love.keyboard.isDown("w") then
+			objects.ball.body:setY(objects.ball.body:getY() - BALL_DEBUG_MOVE)
+		end
+		if love.keyboard.isDown("s") then
+			objects.ball.body:setY(objects.ball.body:getY() + BALL_DEBUG_MOVE)
+		end
+		if love.keyboard.isDown("a") then
+			objects.ball.body:setX(objects.ball.body:getX() - BALL_DEBUG_MOVE)
+		end
+		if love.keyboard.isDown("d") then
+			objects.ball.body:setX(objects.ball.body:getX() + BALL_DEBUG_MOVE)
+		end
+
 	end
 
-	-- move ball by wasd.
-	if love.keyboard.isDown("w") then
-		objects.ball.body:setY(objects.ball.body:getY() - BALL_DEBUG_MOVE)
-	end
-	if love.keyboard.isDown("s") then
-		objects.ball.body:setY(objects.ball.body:getY() + BALL_DEBUG_MOVE)
-	end
-	if love.keyboard.isDown("a") then
-		objects.ball.body:setX(objects.ball.body:getX() - BALL_DEBUG_MOVE)
-	end
-	if love.keyboard.isDown("d") then
-		objects.ball.body:setX(objects.ball.body:getX() + BALL_DEBUG_MOVE)
+	for i, v in pairs(level.checkpoints) do
+		if checked < i then
+			local dx = v.x - objects.ball.body:getX()
+			local dy = v.y - objects.ball.body:getY()
+			local d = math.sqrt(dx*dx+dy*dy)
+			if d < CHECKPOINT_LEN then
+				checked = i
+				sounds.start.sound:play()
+
+				if i == 1 then
+				end
+				if i == #level.checkpoints then
+					isgoal = true
+				end
+			end
+		end
 	end
 
-
-	world:update(dt)
+	if not isgoal then
+		world:update(dt)
+	end
 
 	camera:lookto(objects.ball.body:getX(), objects.ball.body:getY())
 
@@ -188,7 +224,12 @@ function love.update(dt)
 
 	-- Detect fall and then return ball position.
 	if objects.ball.body:getY() > BALL_FALLED_Y_UPPER then
-		objects.ball.body:setPosition(BALL_INIT_X, BALL_INIT_Y)
+		if checked == 0 then
+			objects.ball.body:setPosition(BALL_INIT_X, BALL_INIT_Y)
+		else
+			checkpoint = level.checkpoints[checked]
+			objects.ball.body:setPosition(checkpoint.x, checkpoint.y)
+		end
 		objects.ball.body:setLinearVelocity(0, 0)
 		objects.ball.body:setAngularVelocity(0, 0)
 		sounds.restart.sound:play()
@@ -197,7 +238,30 @@ function love.update(dt)
 end
 
 function love.draw()
+
+	if isgoal then
+		love.graphics.printf(
+			"Goal!", 0, -50 + DISP_H / 2, DISP_W, "center")
+	end
+
+	for k, v in pairs(level.messages) do
+		bx = objects.ball.body:getX()
+		if v.xbegin < bx and bx < v.xend then
+			love.graphics.printf(
+				v.message, 0, DISP_H / 2, DISP_W, "center")
+		end
+	end
+
 	camera:set()
+
+	for i, v in pairs(level.checkpoints) do
+		if i <= checked then
+			love.graphics.setColor(201, 201, 137, 128)
+		else
+			love.graphics.setColor(137, 201, 137, 128)
+		end
+		love.graphics.circle("fill", v.x, v.y, CHECKPOINT_LEN)
+	end
 
 	love.graphics.setColor(137, 137, 137)
 	love.graphics.setLineWidth(5)
@@ -217,13 +281,15 @@ function love.draw()
 	camera:unset()
 
 	-- print information for developing perpose.
-	love.graphics.setColor(0, 0, 0)
-	love.graphics.printf(
-	string.format("pos:%3.2f, %3.2f", objects.ball.body:getX(), objects.ball.body:getY()),
-	0, 0, DISP_W)
-	love.graphics.printf(
-	string.format("camera:%3.2f, %3.2f, %3.2f", camera.x, camera.y, camera.scale),
-	0, 20, DISP_W)
+	if isdebug then
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.printf(
+		string.format("pos:%3.2f, %3.2f", objects.ball.body:getX(), objects.ball.body:getY()),
+		0, 0, DISP_W)
+		love.graphics.printf(
+		string.format("camera:%3.2f, %3.2f, %3.2f", camera.x, camera.y, camera.scale),
+		0, 20, DISP_W)
+	end
 
 end
 
