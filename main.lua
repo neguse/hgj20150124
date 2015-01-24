@@ -2,6 +2,9 @@
 -- constants
 DISP_W = 800
 DISP_H = 600
+
+MARK_D = 5
+
 TORQUE_PER_PUSH = 40000
 JUMP_PER_PUSH = -30000
 
@@ -66,5 +69,12 @@ function love.draw()
 
 	love.graphics.setColor(23, 23, 23)
 	love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
+	-- draw marking
+	love.graphics.setColor(82, 82, 82)
+	a = objects.ball.body:getAngle()
+	x = objects.ball.body:getX() + math.cos(a) * MARK_D
+	y = objects.ball.body:getY() + math.sin(a) * MARK_D
+	love.graphics.circle("fill", x, y, 4)
+
 end
 
