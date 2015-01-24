@@ -1,6 +1,9 @@
-.PHONY: love
+.PHONY: love clean
 
 TITLE=SuperRollingBall
+
+clean:
+	rm *.love
 
 # This is how to make love.
 love: $(TITLE).love
