@@ -52,7 +52,9 @@ objects = {}
 camera = { x=0, y=0, scale=1 }
 checked = 0
 isgoal = false
-isdebug = false
+isdebug = true
+starttime = nil
+goaltime = nil
 
 function pack(...)
 	return arg
@@ -199,8 +201,10 @@ function love.update(dt)
 				sounds.start.sound:play()
 
 				if i == 1 then
+					starttime = love.timer.getTime()
 				end
 				if i == #level.checkpoints then
+					goaltime = love.timer.getTime()
 					isgoal = true
 				end
 			end
@@ -238,10 +242,19 @@ function love.update(dt)
 end
 
 function love.draw()
+	if starttime ~= nil and goaltime == nil then
+		love.graphics.printf(
+			string.format("time:%2.5f", love.timer.getTime() - starttime),
+			0, 0, DISP_W, "right")
+	end
 
 	if isgoal then
 		love.graphics.printf(
-			"Goal!", 0, -50 + DISP_H / 2, DISP_W, "center")
+			"Goal!", 0, -150 + DISP_H / 2, DISP_W, "center")
+
+		love.graphics.printf(
+			string.format("time:%2.5f", goaltime - starttime),
+			0, -50 + DISP_H / 2, DISP_W, "center")
 	end
 
 	for k, v in pairs(level.messages) do
