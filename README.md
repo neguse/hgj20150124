@@ -7,6 +7,20 @@ What is this?
 This is one of the game made in [HITORI GAME JAM](https://twitter.com/aoitaku/status/558621958732910593).
 Twitter hashtag is [#hgj2015](https://twitter.com/hashtag/hgj2015).
 
+How to play?
+------------
+
+*   Install [LÖVE](https://www.love2d.org/).
+*   Get [Released SuperRollingBar.love](https://github.com/neguse/hgj20150124/releases) file and run it.
+*   Enjoy!
+
+遊び方
+------
+
+*   [LÖVE](https://www.love2d.org/)をインストールします。
+*   [ReleasesにあるSuperRollingBar.love](https://github.com/neguse/hgj20150124/releases)ファイルをダウンロードし、実行します。
+*   楽しみます。
+
 Regulation of HITORI GAME JAM
 -----------------------------
 
