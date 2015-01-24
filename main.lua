@@ -61,8 +61,18 @@ function love.load()
 	world = love.physics.newWorld(0, 9.81*64, true)
 
 	objects.ground = {}
-	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-50/2)
-	objects.ground.shape = love.physics.newRectangleShape(DISP_W, 50)
+	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-250/2)
+	objects.ground.shape = love.physics.newChainShape(false,
+		-100, -500,
+		-100, 0,
+		300, 0,
+		500, 0,
+		600, 10,
+		700, 20,
+		800, -30,
+		1200, 50,
+		1300, -50
+		)
 	objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
 
 	objects.ball = {}
@@ -119,7 +129,8 @@ function love.draw()
 	camera:set()
 
 	love.graphics.setColor(137, 137, 137)
-	love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
+	love.graphics.setLineWidth(5)
+	love.graphics.line(objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
 
 	love.graphics.setColor(23, 23, 23)
 	love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
