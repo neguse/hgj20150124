@@ -1,4 +1,15 @@
 
+level = {
+	shapes = {
+		start = {
+			points = { -100, -500, -100, 0, 300, 0, 500, 0, 600, 10, 700, 20, 800, -30, 1200, 50, 1300, -50 },
+		},
+	},
+	bodies = {
+		start = { shape = "start", x = 400, y = 450 },
+	}
+}
+
 -- constants
 DISP_W = 800
 DISP_H = 600
@@ -21,6 +32,10 @@ torque = 0
 jump = 0
 objects = {}
 camera = { x=0, y=0, scale=1 }
+
+function pack(...)
+	return arg
+end
 
 -- camera
 function camera:set()
@@ -65,20 +80,24 @@ function love.load()
 	world = love.physics.newWorld(0, GRAVITY, true)
 
 	objects.ground = {}
-	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-250/2)
-	objects.ground.shape = love.physics.newChainShape(false,
-		unpack({
-			-100, -500,
-			-100, 0,
-			300, 0,
-			500, 0,
-			600, 10,
-			700, 20,
-			800, -30,
-			1200, 50,
-			1300, -50
-		}))
-	objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
+	objects.ground.shapes = {}
+	for k, v in pairs(level.shapes) do
+		objects.ground.shapes[k] = love.physics.newChainShape(false, unpack(v.points))
+	end
+	objects.ground.bodies = {}
+	objects.ground.points = {}
+	for k, v in pairs(level.bodies) do
+		local body = love.physics.newBody(world, v.x, v.y)
+		print (body)
+		local shape = objects.ground.shapes[v.shape]
+		local fixture = love.physics.newFixture(body, shape)
+
+		objects.ground.bodies[k] = {
+			body = body,
+			shape = shape,
+			fixture = fixture,
+		}
+	end
 
 	objects.ball = {}
 	objects.ball.body = love.physics.newBody(world, BALL_INIT_X, BALL_INIT_Y, "dynamic")
@@ -160,7 +179,9 @@ function love.draw()
 
 	love.graphics.setColor(137, 137, 137)
 	love.graphics.setLineWidth(5)
-	love.graphics.line(objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
+	for k, v in pairs(objects.ground.bodies) do
+		love.graphics.line(v.body:getWorldPoints(v.shape:getPoints()))
+	end
 
 	love.graphics.setColor(23, 23, 23)
 	love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
