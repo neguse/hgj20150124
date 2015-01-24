@@ -3,9 +3,11 @@
 DISP_W = 800
 DISP_H = 600
 TORQUE_PER_PUSH = 40000
+JUMP_PER_PUSH = -30000
 
 -- variables
 torque = 0
+jump = 0
 objects = {}
 
 function love.load()
@@ -39,6 +41,9 @@ function love.keypressed(key, isrepeat)
    if key == "right" and not isrepeat then
 	   torque = torque + TORQUE_PER_PUSH
    end
+   if key == "up" and not isrepeat then
+	   jump = jump + JUMP_PER_PUSH
+   end
 end
 
 function love.update(dt)
@@ -47,6 +52,10 @@ function love.update(dt)
 	if torque ~= 0 then
 		objects.ball.body:applyTorque(torque)
 		torque = 0
+	end
+	if jump ~= 0 then
+		objects.ball.body:applyForce(0, jump)
+		jump = 0
 	end
 
 end
