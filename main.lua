@@ -1,4 +1,11 @@
 
+sounds = {
+	hit = { path = "resources/hit.wav" },
+	restart = { path = "resources/restart.wav" },
+	roll = { path = "resources/roll.wav" },
+	start = { path = "resources/start.wav" },
+}
+
 level = {
 	shapes = {
 		start = {
@@ -75,9 +82,15 @@ function camera:lookto(x, y)
 	camera:setScale(ns)
 end
 
+function beginContact()
+	sounds.hit.sound:rewind()
+	sounds.hit.sound:play()
+end
+
 function love.load()
 	love.physics.setMeter(64)
 	world = love.physics.newWorld(0, GRAVITY, true)
+	world:setCallbacks(beginContact)
 
 	objects.ground = {}
 	objects.ground.shapes = {}
@@ -108,22 +121,30 @@ function love.load()
 
 	love.graphics.setBackgroundColor(220, 220, 220)
 	love.window.setMode(DISP_W, DISP_H)
+
+	for k, v in pairs(sounds) do
+		v.sound = love.audio.newSource(v.path)
+	end
+
 end
 
-
 function love.keypressed(key, isrepeat)
-   if key == "escape" then
-      love.event.quit()
-   end
-   if key == "left" and not isrepeat then
-	   torque = torque - TORQUE_PER_PUSH
-   end
-   if key == "right" and not isrepeat then
-	   torque = torque + TORQUE_PER_PUSH
-   end
-   if key == "up" and not isrepeat then
-	   jump = jump + JUMP_PER_PUSH
-   end
+	if key == "escape" then
+		love.event.quit()
+	end
+	if key == "left" and not isrepeat then
+		torque = torque - TORQUE_PER_PUSH
+		sounds.roll.sound:rewind()
+		sounds.roll.sound:play()
+	end
+	if key == "right" and not isrepeat then
+		torque = torque + TORQUE_PER_PUSH
+		sounds.roll.sound:rewind()
+		sounds.roll.sound:play()
+	end
+	if key == "up" and not isrepeat then
+		jump = jump + JUMP_PER_PUSH
+	end
 end
 
 function love.update(dt)
@@ -170,6 +191,7 @@ function love.update(dt)
 		objects.ball.body:setPosition(BALL_INIT_X, BALL_INIT_Y)
 		objects.ball.body:setLinearVelocity(0, 0)
 		objects.ball.body:setAngularVelocity(0, 0)
+		sounds.restart.sound:play()
 	end
 
 end
@@ -197,11 +219,11 @@ function love.draw()
 	-- print information for developing perpose.
 	love.graphics.setColor(0, 0, 0)
 	love.graphics.printf(
-		string.format("pos:%3.2f, %3.2f", objects.ball.body:getX(), objects.ball.body:getY()),
-		0, 0, DISP_W)
+	string.format("pos:%3.2f, %3.2f", objects.ball.body:getX(), objects.ball.body:getY()),
+	0, 0, DISP_W)
 	love.graphics.printf(
-		string.format("camera:%3.2f, %3.2f, %3.2f", camera.x, camera.y, camera.scale),
-		0, 20, DISP_W)
+	string.format("camera:%3.2f, %3.2f, %3.2f", camera.x, camera.y, camera.scale),
+	0, 20, DISP_W)
 
 end
 
