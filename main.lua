@@ -1,6 +1,7 @@
 
 -- constants
-DISP_W = 650
+DISP_W = 800
+DISP_H = 600
 TORQUE_PER_PUSH = 40000
 
 -- variables
@@ -12,19 +13,19 @@ function love.load()
 	world = love.physics.newWorld(0, 9.81*64, true)
 
 	objects.ground = {}
-	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_W-50/2)
+	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-50/2)
 	objects.ground.shape = love.physics.newRectangleShape(DISP_W, 50)
 	objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
 
 	objects.ball = {}
-	objects.ball.body = love.physics.newBody(world, DISP_W/2, DISP_W/2, "dynamic")
+	objects.ball.body = love.physics.newBody(world, DISP_W/2, DISP_H/2, "dynamic")
 	objects.ball.shape = love.physics.newCircleShape(20)
 	objects.ball.fixture = love.physics.newFixture(objects.ball.body, objects.ball.shape, 1)
 	objects.ball.fixture:setFriction(0.8)
 	objects.ball.fixture:setRestitution(0.9)
 
 	love.graphics.setBackgroundColor(220, 220, 220)
-	love.window.setMode(DISP_W, DISP_W)
+	love.window.setMode(DISP_W, DISP_H)
 end
 
 
