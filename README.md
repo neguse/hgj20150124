@@ -5,6 +5,7 @@ What is this?
 -------------
 
 This is one of the game made in [HHITORI GAME JAM](https://twitter.com/aoitaku/status/558621958732910593).
+Twitter hashtag is [#HITORIGAMEJAM](https://twitter.com/hashtag/HITORIGAMEJAM).
 
 Regulation of HHITORI GAME JAM
 ------------------------------
