@@ -1,6 +1,6 @@
 .PHONY: love
 
-TITLE=Unnamed
+TITLE=SuperRollingBall
 
 # This is how to make love.
 love: $(name).love
