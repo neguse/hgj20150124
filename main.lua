@@ -11,14 +11,35 @@ level = {
 		start = {
 			points = { -100, -500, -100, 0, 300, 0, 500, 0, 600, 10, 700, 20, 800, -30, 1200, 50, 1300, -50 },
 		},
+		second = {
+			points = {0, 0, 30, 3, 82, 28, 148, 24, 193, -12, 282, -64, 387, -33, 481, 16, 638, 47, 668, -39, 775, -42, },
+		},
+		owan = {
+			points = {4, -290, 9, -275, 28, -229, 53, -200, 75, -168, 128, -116, 169, -83, 207, -33, 247, -14, 301, -1, 373, 4, 443, 7, 542, -10, 619, -77, 650, -113, 689, -150, 723, -210, 755, -256, 773, -290, },
+		},
+		slope = {
+			points = {0, 0, 17, 2, 87, -9, 125, -22, 208, -38, 265, -37, 320, -34, 407, -34, 506, -16, 576, -6, 659, -3, 754, -2, 787, 0, },
+		},
+		upper = {
+			points = {0, 0, 11, -1, 64, -10, 162, -34, 302, -73, 497, -166, 667, -250, 764, -298, },
+		},
 	},
 	bodies = {
 		start = { shape = "start", x = 0, y = 100 },
+		owan = { shape = "owan", x = 1365, y = 320 },
+		owan2 = { shape = "owan", x = 2265, y = 420 },
+		owan3 = { shape = "owan", x = 3265, y = 620 },
+		slope = { shape = "slope", x = 4134, y = 450 },
+		upper = { shape = "upper", x = 5134, y = 450 },
+		upper2 = { shape = "upper", x = 6134, y = 350 },
+		upper3 = { shape = "upper", x = 7134, y = 350 },
+		upper4 = { shape = "upper", x = 8134, y = 350 },
 	},
 	checkpoints = {
 		{x = 150, y = 0},
-		{x = 800, y = 0},
-		{x = 1200, y = 0},
+		{x = 1200, y = -100},
+		{x = 3600, y = 523},
+		{x = 9999, y = 0},
 	},
 	messages = {
 		{xbegin = -200, xend = 100, message = "Push Left or Right key to rolling ball." },
@@ -49,7 +70,7 @@ CHECKPOINT_LEN = 100
 torque = 0
 jump = 0
 objects = {}
-camera = { x=0, y=0, scale=1 }
+camera = { x=0, y=0, scale=1.5 }
 checked = 0
 isgoal = false
 isdebug = true
@@ -82,7 +103,7 @@ end
 
 function camera:lookto(x, y)
 	tx = - DISP_W / 2 + x
-	ty = - DISP_H * 3 / 5 + y
+	ty = - DISP_H + y
 
 	nx = camera.x + (tx - camera.x) * 0.1
 	ny = camera.y + (ty - camera.y) * 0.1
@@ -91,11 +112,11 @@ function camera:lookto(x, y)
 	--	ny = camera.y + (ty - camera.y) * 0.001
 	-- end
 
-	ts = math.max(math.abs(nx - tx), math.abs(ny - ty), 1)
-	ns = camera.scale + (math.max(ts / math.min(DISP_W / 2, DISP_H / 2), 1) - camera.scale) * 0.1
+	-- ts = math.max(math.abs(nx - tx), math.abs(ny - ty), 1)
+	-- ns = camera.scale + (math.max(ts / math.min(DISP_W / 2, DISP_H / 2), 1) - camera.scale) * 0.1
 
 	camera:setPos(nx, ny)
-	camera:setScale(ns)
+	-- camera:setScale(ns)
 end
 
 function beginContact()
@@ -132,7 +153,7 @@ function love.load()
 	objects.ball.shape = love.physics.newCircleShape(20)
 	objects.ball.fixture = love.physics.newFixture(objects.ball.body, objects.ball.shape, 1)
 	objects.ball.fixture:setFriction(0.8)
-	objects.ball.fixture:setRestitution(0.9)
+	objects.ball.fixture:setRestitution(0.8)
 
 	love.graphics.setBackgroundColor(220, 220, 220)
 	love.window.setMode(DISP_W, DISP_H)
