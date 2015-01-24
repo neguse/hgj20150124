@@ -67,16 +67,17 @@ function love.load()
 	objects.ground = {}
 	objects.ground.body = love.physics.newBody(world, DISP_W/2, DISP_H-250/2)
 	objects.ground.shape = love.physics.newChainShape(false,
-		-100, -500,
-		-100, 0,
-		300, 0,
-		500, 0,
-		600, 10,
-		700, 20,
-		800, -30,
-		1200, 50,
-		1300, -50
-		)
+		unpack({
+			-100, -500,
+			-100, 0,
+			300, 0,
+			500, 0,
+			600, 10,
+			700, 20,
+			800, -30,
+			1200, 50,
+			1300, -50
+		}))
 	objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
 
 	objects.ball = {}
