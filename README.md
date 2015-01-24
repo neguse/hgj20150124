@@ -4,11 +4,13 @@ Super Rolling Ball
 What is this?
 -------------
 
-This is one of the game made in [HHITORI GAME JAM](https://twitter.com/aoitaku/status/558621958732910593).
+This is one of the game made in [HITORI GAME JAM](https://twitter.com/aoitaku/status/558621958732910593).
 Twitter hashtag is [#hgj2015](https://twitter.com/hashtag/hgj2015).
 
-Regulation of HHITORI GAME JAM
-------------------------------
+Regulation of HITORI GAME JAM
+-----------------------------
+
+*   Create a game by oneself within 8 hour between 2015/01/24 00:00 〜 2015/01/25 23:59.
 
 *   Write readme file.
     readme file must contains using tools for developing(Language, Library, ...).
