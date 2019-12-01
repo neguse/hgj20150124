@@ -134,7 +134,7 @@ function camera:lookto(x, y)
 end
 
 function beginContact()
-	sounds.hit.sound:rewind()
+	sounds.hit.sound:seek(0)
 	sounds.hit.sound:play()
 end
 
@@ -169,27 +169,27 @@ function love.load()
 	objects.ball.fixture:setFriction(0.8)
 	objects.ball.fixture:setRestitution(0.8)
 
-	love.graphics.setBackgroundColor(220, 220, 220)
+	love.graphics.setBackgroundColor(220/255, 220/255, 220/255)
 	love.window.setMode(DISP_W, DISP_H)
 
 	for k, v in pairs(sounds) do
-		v.sound = love.audio.newSource(v.path)
+		v.sound = love.audio.newSource(v.path, 'static')
 	end
 
 end
 
-function love.keypressed(key, isrepeat)
+function love.keypressed(key, scancode, isrepeat)
 	if key == "escape" then
 		love.event.quit()
 	end
 	if key == "left" and not isrepeat then
 		torque = torque - TORQUE_PER_PUSH
-		sounds.roll.sound:rewind()
+		sounds.roll.sound:seek(0)
 		sounds.roll.sound:play()
 	end
 	if key == "right" and not isrepeat then
 		torque = torque + TORQUE_PER_PUSH
-		sounds.roll.sound:rewind()
+		sounds.roll.sound:seek(0)
 		sounds.roll.sound:play()
 	end
 	if key == "up" and not isrepeat then
@@ -198,7 +198,6 @@ function love.keypressed(key, isrepeat)
 end
 
 function love.update(dt)
-
 	if isdebug then
 
 		-- f fixes ball.
@@ -273,7 +272,6 @@ function love.update(dt)
 		objects.ball.body:setAngularVelocity(0, 0)
 		sounds.restart.sound:play()
 	end
-
 end
 
 function love.draw()
@@ -304,23 +302,23 @@ function love.draw()
 
 	for i, v in pairs(level.checkpoints) do
 		if i <= checked then
-			love.graphics.setColor(201, 201, 137, 128)
+			love.graphics.setColor(201/255, 201/255, 137/255, 128/255)
 		else
-			love.graphics.setColor(137, 201, 137, 128)
+			love.graphics.setColor(137/255, 201/255, 137/255, 128/255)
 		end
 		love.graphics.circle("fill", v.x, v.y, v.r)
 	end
 
-	love.graphics.setColor(137, 137, 137)
+	love.graphics.setColor(137/255, 137/255, 137/255)
 	love.graphics.setLineWidth(5)
 	for k, v in pairs(objects.ground.bodies) do
 		love.graphics.line(v.body:getWorldPoints(v.shape:getPoints()))
 	end
 
-	love.graphics.setColor(23, 23, 23)
+	love.graphics.setColor(23/255, 23/255, 23/255)
 	love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
 	-- draw marking
-	love.graphics.setColor(82, 82, 82)
+	love.graphics.setColor(82/255, 82/255, 82/255)
 	a = objects.ball.body:getAngle()
 	x = objects.ball.body:getX() + math.cos(a) * MARK_D
 	y = objects.ball.body:getY() + math.sin(a) * MARK_D

@@ -10,14 +10,14 @@ Twitter hashtag is [#hgj2015](https://twitter.com/hashtag/hgj2015).
 How to play?
 ------------
 
-*   Install [LÖVE](https://www.love2d.org/).
+*   Install [LÖVE](https://www.love2d.org/). I tested in version 11.3.
 *   Get [Released SuperRollingBar.love](https://github.com/neguse/hgj20150124/releases) file and run it.
 *   Enjoy!
 
 遊び方
 ------
 
-*   [LÖVE](https://www.love2d.org/)をインストールします。
+*   [LÖVE](https://www.love2d.org/)をインストールします。バージョン11.3で動作確認しています。
 *   [ReleasesにあるSuperRollingBar.love](https://github.com/neguse/hgj20150124/releases)ファイルをダウンロードし、実行します。
 *   楽しみます。
 
